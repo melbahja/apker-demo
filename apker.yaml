@@ -3,8 +3,6 @@ name: my-nginx-demo
 image:
   size: small
   from: centos-8-x64 # distro-version-arch
-  # Or from url
-  # from: https://cloud.centos.org/centos/8/x86_64/images/CentOS-8-ec2-8.1.1911-20200113.3.x86_64.qcow2
 
 provider:
   name: {{Env "APKER_PROVIDER"}}
@@ -13,11 +11,12 @@ provider:
 
 # Git is required you need to specify the git install commands
 setup:
+  - dnf update -y
+  - dnf install rsync -y
   - dnf install git -y
 
 deploy:
   steps:
-    - run dnf update -y
     - run dnf install nginx -y
     - copy public/ /usr/share/nginx/html/
     - run chown nginx:nginx /usr/share/nginx/html/ -R
