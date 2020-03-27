@@ -2,14 +2,18 @@ version: v1
 name: my-nginx-demo
 image:
   size: small
-  from: centos-8-x64 # distro-version-arch
+  from: centos-8-x64 # distro name (distro-version-arch)
+  # or you can import your costum image from url like this:
+  # from: https://cloud.centos.org/centos/8/x86_64/images/CentOS-8-ec2-8.1.1911-20200113.3.x86_64.qcow2
+
+# You shoul export APKER_PROVIDER and APKER_KEY env vars before running apker deploy
 
 provider:
-  name: {{Env "APKER_PROVIDER"}}
+  name: {{Env "APKER_PROVIDER"}} # this is this provider name for example: digitalocean
   credentials:
-    API_KEY: {{Env "APKER_KEY"}}
+    API_KEY: {{Env "APKER_KEY"}} # this is the api key of the provider.
 
-# Git is required you need to specify the git install commands
+# Git and rsync is required you need to specify to apker how to install them first
 setup:
   - dnf update -y
   - dnf install rsync -y
@@ -21,15 +25,17 @@ deploy:
     - copy public/ /usr/share/nginx/html/
     - run chown nginx:nginx /usr/share/nginx/html/ -R
     - run systemctl enable nginx
-    - run systemctl start nginx
     - reboot
 
+# actions you can run them via: apker run [action...]
+# actiuons not implemented yet!
 actions:
   status: systemctl status nginx
   restart: systemctl restart nginx
   reboot: reboot &
 
-# Events will be executed on local machine not remote!
+# Events commands to run on deploy
+# commands will be executed on local machine not remote!
 events:
   error: echo "error on deploy steps"
   done: echo "done"
