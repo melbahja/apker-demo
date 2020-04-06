@@ -41,5 +41,5 @@ actions:
 # Events commands to run on deploy
 # commands will be executed on local machine not remote!
 events:
-  success: echo "error on deploy steps"
-  failure: echo "done"
+  success: echo "success event executed"
+  failure: echo "failure event executed"
