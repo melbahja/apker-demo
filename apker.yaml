@@ -13,16 +13,20 @@ provider:
   credentials:
     API_KEY: {{Env "APKER_KEY"}} # this is the api key of the provider.
 
-# Git and rsync is required you need to specify to apker how to install them first
-setup:
-  - dnf update -y
-  - dnf install rsync -y
-  - dnf install git -y
-
 deploy:
+
+  env:
+    MY_VAR: {{GetOr "myvar" "HELLO WORLD"}}
+
+  setup:
+    - dnf update -y
+    - dnf install rsync -y
+    - dnf install git -y 
+
   steps:
     - run dnf install nginx -y
     - copy public/ /usr/share/nginx/html/
+    - run echo $MY_VAR > /usr/share/nginx/html/hi.html
     - run chown nginx:nginx /usr/share/nginx/html/ -R
     - run systemctl enable nginx
     - reboot
@@ -37,5 +41,5 @@ actions:
 # Events commands to run on deploy
 # commands will be executed on local machine not remote!
 events:
-  error: echo "error on deploy steps"
-  done: echo "done"
+  success: echo "error on deploy steps"
+  failure: echo "done"
