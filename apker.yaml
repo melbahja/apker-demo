@@ -29,6 +29,7 @@ deploy:
     - run echo $MY_VAR > /usr/share/nginx/html/hi.html
     - run chown nginx:nginx /usr/share/nginx/html/ -R
     - run systemctl enable nginx
+    - action ./test.sh test
     - reboot
 
 # actions you can run them via: apker run [action...]
